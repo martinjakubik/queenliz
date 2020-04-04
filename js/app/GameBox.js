@@ -119,23 +119,13 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
 
     var aCards = oGameBox.makeCards(aBatanimalCardValues, bAddSkunk);
 
-    var aSounds = {
-         hamsterSound: new Audio('../resources/hamster-wheel.wav'),
-          rabbitSound: new Audio('../resources/rabbit-crunch.wav'),
-            meowSound: new Audio('../resources/cat-meow.wav'),
-            barkSound: new Audio('../resources/dog-bark.wav'),
-           tigerSound: new Audio('../resources/tiger-growl.wav'),
-        elephantSound: new Audio('../resources/elephant.wav')
-    }
-
     GameBox.makeView();
 
     var aPlayerNames = [ 'cat', 'dog', 'cow', 'pig', 'horse', 'skunk', 'ferret', 'duck', 'jackal' ];
 
-    var oWarGamePlay = new QueenLizGamePlay(
+    var oQueenLizGamePlay = new QueenLizGamePlay(
         nNumPlayers,
         aCards,
-        aSounds,
         aPlayerNames,
         oGameBox.maxNumberOfSlots,
         oGameBox.cardWidth,
@@ -147,6 +137,6 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
 
     var bShuffleCards = true;
 
-    oWarGamePlay.start(bShuffleCards);
+    oQueenLizGamePlay.start(bShuffleCards);
 
 });

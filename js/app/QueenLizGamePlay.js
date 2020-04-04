@@ -3,9 +3,9 @@ define('QueenLizGamePlay', ['GamePlay', 'Player', 'Tools', 'GameSession'], funct
 
     'use strict';
 
-    var QueenLizGamePlay = function (nNumPlayers, aCards, aSounds, aPlayerNames, nMaxNumberOfSlots, nCardWidth, oCallbacks) {
+    var QueenLizGamePlay = function (nNumPlayers, aCards, [], aPlayerNames, nMaxNumberOfSlots, nCardWidth, oCallbacks) {
 
-        GamePlay.call(this, nNumPlayers, aCards, aSounds, aPlayerNames, nMaxNumberOfSlots, nCardWidth, oCallbacks);
+        GamePlay.call(this, nNumPlayers, aCards, [], aPlayerNames, nMaxNumberOfSlots, nCardWidth, oCallbacks);
 
     };
 
