@@ -1,0 +1,12 @@
+.DS_Store
+.ftpauth
+.firebaserc
+node_modules
+public
+
+build
+
+js/lib
+
+grunttasks/ftpPut.js
+grunttasks/ftpPut.js.orig
