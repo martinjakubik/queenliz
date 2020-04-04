@@ -1,12 +1,17 @@
 .DS_Store
 .ftpauth
 .firebaserc
+.vscode
 node_modules
 public
 
 build
 
+html/index.html
+
 js/lib
 
 grunttasks/ftpPut.js
 grunttasks/ftpPut.js.orig
+
+
