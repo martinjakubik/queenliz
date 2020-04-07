@@ -1,0 +1,88 @@
+TODO
+
+ - principles
+
+    homebase controllers negotiate how two homebases connect to the same game slot
+
+    stackcontroller manages the movement of the cards
+
+ x - do we need this function for single stack?
+
+ x doesPlayerHaveCardOnTableFaceUp
+ x doesPlayerHaveCardOnTableFaceDown
+
+ - figure out if we need this:
+   findPlayerForPlayerViewId
+
+ x - do we still need playerControllers and homebaseControllers? [homebase yes, and playerControllers become a single stackController]
+
+ -> we don't really have players
+ -> a player controller is really a way to update the UI at the right time
+ -> so we'll only have 1 stack controller
+ 
+ -> and 2 homebase controllers
+ 
+ - finish functions
+
+moveToNextRound (if we are at end of stack, shuffle and reset the stack)
+
+updateGameStateBasedOnTable (check if we are at the end of the stack)
+
+isGameFinished (check if we have played three rounds)
+
+ - replace
+
+  oPlayer by oHomebase
+
+  playerControllers[i] by homebaseControllers[i] (when the functions are about negotiating a new game)
+
+  playerControllers[i] by stackController (when the functions are about moving cards)
+
+        var oPlayerValue = oSnapshot.val();
+    by
+
+        var oHomebaseValue = oSnapshot.val();
+
+ - remove functions
+
+ distributeCardsToAvailablePlayers (and replace invocations by         stackController.setHand(this.shuffledCards);
+        this.result = '';
+
+ - check if makePlayerController requires parameters:
+ array of homebase controllers?
+ a stack controller?
+   ... and update makePlayerController
+
+   [yes, needs both an array of homebaseControllers and one empty stackController]
+
+ - remove name from homebase
+
+ - what is the point of 
+
+                oRemotePlayer.setHand(oPlayerHandValue);
+
+in 
+            // sets homebase's hand
+            if (oGamePlay.stackController) {
+                oGamePlay.stackController.setHand(
+                    oPlayerHandValue
+                );
+                oGamePlay.stackController.renderHand();
+                oRemotePlayer.setHand(oPlayerHandValue);
+            }
+
+
+ - when the game slot is created, add a stackController to the two homebaseControllers
+
+ - listen to the stackController the same way you used to listen to changes in the playerController to move the card to the table
+
+ - in makeHomebase0, check why stackController has  isLocal and sessionId fields
+
+ - in makeHomebase1, delete this?
+
+         // gets the rest of the cards to give to homebase 1
+        // (there may be no cards locally if the browser was refreshed)
+        if (!oGamePlay.stackController) {
+            oGamePlay.stackController = oGamePlay.gameSlot ? oGamePlay.gameSlot.stack : null;
+        }
+

@@ -7,6 +7,8 @@ requirejs.config({
         lib: '../lib',
         GamePlay: '../lib/kierki/js/GamePlay',
         Player: '../lib/kierki/js/Player',
+        Homebase: '../lib/kierki/js/Homebase',
+        Stack: '../lib/kierki/js/Stack',
         Tools: '../lib/kierki/js/Tools',
         GameSession: '../lib/kierki/js/GameSession'
     }

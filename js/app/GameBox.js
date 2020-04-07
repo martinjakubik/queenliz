@@ -43,22 +43,22 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
         document.body.insertBefore(oResultView, null);
     };
 
-    GameBox.getRandomPlayerName = function (nPlayer, aPlayerNames, sNotThisName) {
+    GameBox.getRandomName = function (nName, aNames, sNotThisName) {
 
-        var i, aCopyOfPlayerNames = [];
-        for (i = 0; i < aPlayerNames.length; i++) {
-            if (aPlayerNames[i] !== sNotThisName) {
-                aCopyOfPlayerNames.push(aPlayerNames[i]);
+        var i, aCopyOfNames = [];
+        for (i = 0; i < aNames.length; i++) {
+            if (aNames[i] !== sNotThisName) {
+                aCopyOfNames.push(aNames[i]);
             }
         }
 
-        var aShuffledPlayerNames = Tools.shuffle(aCopyOfPlayerNames);
+        var aShuffledNames = Tools.shuffle(aCopyOfNames);
 
-        if (aShuffledPlayerNames.length > 0) {
-            return aShuffledPlayerNames[0];
+        if (aShuffledNames.length > 0) {
+            return aShuffledNames[0];
         }
 
-        return 'Player' + nPlayer;
+        return 'Name' + nName;
     };
 
     GameBox.renderResult = function (sResult) {
@@ -71,31 +71,15 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
         oResultView.appendChild(oContent);
     };
 
-    GameBox.prototype.makeCards = function (aCardValues, bAddSkunk) {
+    GameBox.prototype.makeCards = function (aCardValues) {
         var aCards = [];
 
-        var aSuitLetters = ['a', 'b', 'c', 'd', 'e', 'f'];
-        var i, nSuit, mHighestSuitsFoundForValue = {};
+        var i;
 
         // distributes the cards into suits
         for (i = 0; i < aCardValues.length; i++) {
-            nSuit = -1;
-            if (!mHighestSuitsFoundForValue[aCardValues[i]] && mHighestSuitsFoundForValue[aCardValues[i]] !== 0) {
-                mHighestSuitsFoundForValue[aCardValues[i]] = nSuit;
-            }
-            mHighestSuitsFoundForValue[aCardValues[i]]++;
-
             aCards.push({
                 value: aCardValues[i],
-                suit: aSuitLetters[mHighestSuitsFoundForValue[aCardValues[i]]]
-            });
-        }
-
-        // adds skunk
-        if (bAddSkunk === true) {
-            aCards.push({
-                value: 14,
-                suit: 'a'
             });
         }
 
@@ -106,32 +90,29 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
 
     var oGameBox = new GameBox();
 
-    var aBatanimalCardValues = [
-        6, 3, 5, 5, 1, 6,
-        4, 2, 4, 3, 1, 3,
-        5, 6, 2, 4, 6, 3,
-        4, 4, 6, 1, 2, 1,
-        4, 5, 1, 3, 5, 2,
-        6, 1, 2, 2, 3, 5
+    var aQueenLizCardValues = [
+        'scientist', 'scale', 'advantage', 'cost', 'psychology',
+        'jogging', 'air', 'parachute', 'shoes', 'paint',
+        'flour', 'lake', 'slope', 'lock', 'flake',
+        'whiskey', 'bagel', 'feta cheese', 'watermelon', 'pumpernickel',
+        'beach', 'watergun', 'cobblestones', 'baby', 'wheat'
     ];
 
-    var bAddSkunk = true;
-
-    var aCards = oGameBox.makeCards(aBatanimalCardValues, bAddSkunk);
+    var aCards = oGameBox.makeCards(aQueenLizCardValues);
 
     GameBox.makeView();
 
-    var aPlayerNames = [ 'cat', 'dog', 'cow', 'pig', 'horse', 'skunk', 'ferret', 'duck', 'jackal' ];
+    var aHomebaseNames = [ 'andrew', 'diana', 'george', 'catherine', 'henry', 'margaret', 'edward', 'mary', 'charles' ];
 
     var oQueenLizGamePlay = new QueenLizGamePlay(
         nNumPlayers,
         aCards,
-        aPlayerNames,
+        aHomebaseNames,
         oGameBox.maxNumberOfSlots,
         oGameBox.cardWidth,
         {
             renderResult: GameBox.renderResult,
-            getRandomPlayerName: GameBox.getRandomPlayerName
+            getRandomName: GameBox.getRandomName
         }
     );
 
