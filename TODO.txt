@@ -12,7 +12,9 @@ TODO
  x doesPlayerHaveCardOnTableFaceDown
 
  - figure out if we need this:
-   findPlayerForPlayerViewId
+   findHomebaseForHomebaseViewId
+   and set 
+        var bIsLocalEvent = ; in localHomebaseTappedCardInHand accordingly
 
  x - do we still need playerControllers and homebaseControllers? [homebase yes, and playerControllers become a single stackController]
 
