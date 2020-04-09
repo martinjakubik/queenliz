@@ -9,9 +9,6 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
         var MAX_NUMBER_OF_SLOTS = 3;
         var CARD_WIDTH = 68;
 
-        var i,
-            nPlayer;
-
         this.slotNumber;
         this.players = [];
         this.maxNumberOfSlots = MAX_NUMBER_OF_SLOTS;
@@ -22,9 +19,9 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
     };
 
     /**
-     * makes the initial view
+     * makes the initial game view
      */
-    GameBox.makeView = function () {
+    GameBox.makeGameView = function () {
 
         var oGameView = document.createElement('div');
         Tools.setClass(oGameView, 'game');
@@ -149,7 +146,9 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
         return aDictionaryElements;
     }
 
-    GameBox.makeView();
+    // starts set up of the game
+
+    GameBox.makeGameView();
 
     var aHomebaseNames = [ 'andrew', 'diana', 'george', 'catherine', 'henry', 'margaret', 'edward', 'mary', 'charles' ];
 
