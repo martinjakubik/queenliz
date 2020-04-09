@@ -17,6 +17,8 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
         this.maxNumberOfSlots = MAX_NUMBER_OF_SLOTS;
         this.cardWidth = CARD_WIDTH;
 
+        this.dictionaries = null;
+
     };
 
     /**
@@ -86,38 +88,73 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
         return aCards;
     };
 
-    var nNumPlayers = 2;
+    GameBox.prototype.getDictionary = function (oSuccessFunction) {
 
-    var oGameBox = new GameBox();
+        var oGameBox = this;
+        var oDatabase = firebase.database();
+        var oDictionariesReference = oDatabase.ref('dictionaries');
+    
+        oDictionariesReference.once('value', function (snapshot) {
+            oGameBox.dictionaries = snapshot.val();
 
-    var aQueenLizCardValues = [
-        'scientist', 'scale', 'advantage', 'cost', 'psychology',
-        'jogging', 'air', 'parachute', 'shoes', 'paint',
-        'flour', 'lake', 'slope', 'lock', 'flake',
-        'whiskey', 'bagel', 'feta cheese', 'watermelon', 'pumpernickel',
-        'beach', 'watergun', 'cobblestones', 'baby', 'wheat'
-    ];
+            oSuccessFunction.call(oGameBox);
+        });
+    
+    };
 
-    var aCards = oGameBox.makeCards(aQueenLizCardValues);
+    GameBox.prototype.getDictionarySuccess = function () {
+
+        var nNumPlayers = 2;
+
+        var oDictionary = oGameBox.dictionaries['english-family'];
+        var aQueenLizCardValues = _convertDictionaryObjectsToElements(oDictionary);
+
+        // var aQueenLizCardValues = [
+        //     'scientist', 'scale', 'advantage', 'cost', 'psychology',
+        //     'jogging', 'air', 'parachute', 'shoes', 'paint',
+        //     'flour', 'lake', 'slope', 'lock', 'flake',
+        //     'whiskey', 'bagel', 'feta cheese', 'watermelon', 'pumpernickel',
+        //     'beach', 'watergun', 'cobblestones', 'baby', 'wheat'
+        // ];
+    
+        var aCards = oGameBox.makeCards(aQueenLizCardValues);
+        
+        var oQueenLizGamePlay = new QueenLizGamePlay(
+            nNumPlayers,
+            aCards,
+            aHomebaseNames,
+            oGameBox.maxNumberOfSlots,
+            oGameBox.cardWidth,
+            {
+                renderResult: GameBox.renderResult,
+                getRandomName: GameBox.getRandomName
+            }
+        );
+    
+        var bShuffleCards = true;
+    
+        oQueenLizGamePlay.start(bShuffleCards);
+
+    };
+
+    var _convertDictionaryObjectsToElements = function (oDictionaryObjects) {
+        var aDictionaryElements = [];
+        var aKeys = Object.keys(oDictionaryObjects);
+        var i;
+        for (i = 0; i < aKeys.length; i++) {
+            var sKey = aKeys[i];
+            var sValue = oDictionaryObjects[sKey];
+            aDictionaryElements.push(sValue);
+        }
+        return aDictionaryElements;
+    }
 
     GameBox.makeView();
 
     var aHomebaseNames = [ 'andrew', 'diana', 'george', 'catherine', 'henry', 'margaret', 'edward', 'mary', 'charles' ];
 
-    var oQueenLizGamePlay = new QueenLizGamePlay(
-        nNumPlayers,
-        aCards,
-        aHomebaseNames,
-        oGameBox.maxNumberOfSlots,
-        oGameBox.cardWidth,
-        {
-            renderResult: GameBox.renderResult,
-            getRandomName: GameBox.getRandomName
-        }
-    );
+    var oGameBox = new GameBox();
 
-    var bShuffleCards = true;
-
-    oQueenLizGamePlay.start(bShuffleCards);
+    oGameBox.getDictionary.call(oGameBox, oGameBox.getDictionarySuccess.bind(oGameBox));
 
 });
