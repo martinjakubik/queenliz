@@ -19,6 +19,33 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
     };
 
     /**
+     * makes the initial master view
+     */
+    GameBox.makeMasterView = function () {
+
+        var oMasterView = document.createElement('div');
+        Tools.setClass(oMasterView, 'master');
+        oMasterView.setAttribute('id', 'master');
+
+        document.body.insertBefore(oMasterView, null);
+
+        var oMenuView = document.createElement('div');
+        Tools.setClass(oMenuView, 'menu');
+        oMenuView.setAttribute('id', 'menu');
+
+        var oDictionaryButton = document.createElement('button');
+        var oContent = document.createTextNode('Dictionaries');
+        Tools.setClass(oDictionaryButton, 'button');
+        oDictionaryButton.setAttribute('id', 'dontWait');
+        oDictionaryButton.appendChild(oContent);
+        oDictionaryButton.onclick = dictionaryButtonPressed.bind(this);
+        oMenuView.insertBefore(oDictionaryButton, null);
+
+        oMasterView.insertBefore(oMenuView, null);
+
+    };
+
+    /**
      * makes the initial game view
      */
     GameBox.makeGameView = function () {
@@ -146,8 +173,13 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
         return aDictionaryElements;
     }
 
+    var dictionaryButtonPressed = function () {
+        console.log('dictionary button pressed');
+    };
+
     // starts set up of the game
 
+    GameBox.makeMasterView();
     GameBox.makeGameView();
 
     var aHomebaseNames = [ 'andrew', 'diana', 'george', 'catherine', 'henry', 'margaret', 'edward', 'mary', 'charles' ];
