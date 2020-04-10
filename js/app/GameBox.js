@@ -38,14 +38,28 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
             label: 'Menu',
             parentView: oMasterView,
             handler: menuButtonPressed.bind(this)
-        })
+        });
+
+        var oHandleTextInputChanged = function (oEvent) {
+            var sValue = '';
+            if (oEvent && oEvent.target) {
+                sValue = oEvent.target.value;
+            }
+            this.wordToAdd = sValue;
+        }.bind(this);
+
+        Tools.makeTextInput({
+            id: 'addWord',
+            parentView: oMenuView,
+            handler: oHandleTextInputChanged.bind(this)
+        });
 
         Tools.makeButton({
-            id: 'dictionaries',
-            label: 'Dictionaries',
+            id: 'addTodictionary',
+            label: 'Add to Dictionary',
             parentView: oMenuView,
-            handler: dictionaryButtonPressed.bind(this)
-        })
+            handler: addToDictionaryButtonPressed.bind(this)
+        });
 
         oMasterView.insertBefore(oMenuView, null);
 
@@ -179,6 +193,16 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
 
     var dictionaryButtonPressed = function () {
         console.log('dictionary button pressed');
+    };
+
+    var addToDictionaryButtonPressed = function () {
+        console.log('add to dictionary: \'' + this.wordToAdd + '\'');
+
+        var oNewWord = this.wordToAdd;
+        var oDatabase = firebase.database();
+        var oEnglishDictionaryReference = oDatabase.ref('dictionaries/english-family/' + oNewWord);
+
+        oEnglishDictionaryReference.set(oNewWord);
     };
 
     // starts set up of the game
