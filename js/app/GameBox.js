@@ -33,21 +33,19 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
         Tools.setClass(oMenuView, 'menu');
         oMenuView.setAttribute('id', 'menu');
 
-        var oMenuButton = document.createElement('button');
-        var oContent = document.createTextNode('Menu');
-        Tools.setClass(oMenuButton, 'menu');
-        oMenuButton.setAttribute('id', 'menu');
-        oMenuButton.appendChild(oContent);
-        oMenuButton.onclick = menuButtonPressed.bind(this);
-        oMasterView.insertBefore(oMenuButton, null);
+        Tools.makeButton({
+            id: 'menuButton',
+            label: 'Menu',
+            parentView: oMasterView,
+            handler: menuButtonPressed.bind(this)
+        })
 
-        var oDictionaryButton = document.createElement('button');
-        var oContent = document.createTextNode('Dictionaries');
-        Tools.setClass(oDictionaryButton, 'button');
-        oDictionaryButton.setAttribute('id', 'dictionaries');
-        oDictionaryButton.appendChild(oContent);
-        oDictionaryButton.onclick = dictionaryButtonPressed.bind(this);
-        oMenuView.insertBefore(oDictionaryButton, null);
+        Tools.makeButton({
+            id: 'dictionaries',
+            label: 'Dictionaries',
+            parentView: oMenuView,
+            handler: dictionaryButtonPressed.bind(this)
+        })
 
         oMasterView.insertBefore(oMenuView, null);
 
@@ -175,8 +173,8 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
     }
 
     var menuButtonPressed = function () {
-        var oMenuButton = document.getElementById('menuButton');
-        Tools.toggleClass(oMenuButton, 'visible');
+        var oMenuView = document.getElementById('menu');
+        Tools.toggleClass(oMenuView, 'visible');
     };
 
     var dictionaryButtonPressed = function () {
