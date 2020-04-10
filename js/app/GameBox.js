@@ -33,10 +33,18 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
         Tools.setClass(oMenuView, 'menu');
         oMenuView.setAttribute('id', 'menu');
 
+        var oMenuButton = document.createElement('button');
+        var oContent = document.createTextNode('Menu');
+        Tools.setClass(oMenuButton, 'menu');
+        oMenuButton.setAttribute('id', 'menu');
+        oMenuButton.appendChild(oContent);
+        oMenuButton.onclick = menuButtonPressed.bind(this);
+        oMasterView.insertBefore(oMenuButton, null);
+
         var oDictionaryButton = document.createElement('button');
         var oContent = document.createTextNode('Dictionaries');
         Tools.setClass(oDictionaryButton, 'button');
-        oDictionaryButton.setAttribute('id', 'dontWait');
+        oDictionaryButton.setAttribute('id', 'dictionaries');
         oDictionaryButton.appendChild(oContent);
         oDictionaryButton.onclick = dictionaryButtonPressed.bind(this);
         oMenuView.insertBefore(oDictionaryButton, null);
@@ -97,13 +105,14 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
         oResultView.appendChild(oContent);
     };
 
-    GameBox.prototype.makeCards = function (aCardValues) {
+    GameBox.makeCards = function (aCardValues, nNumberOfCards) {
         var aCards = [];
 
         var i;
+        var nNumberOfCardsInStack = Math.min(aCardValues.length, nNumberOfCards);
 
         // distributes the cards into suits
-        for (i = 0; i < aCardValues.length; i++) {
+        for (i = 0; i < nNumberOfCardsInStack; i++) {
             aCards.push({
                 value: aCardValues[i],
             });
@@ -133,15 +142,7 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
         var oDictionary = oGameBox.dictionaries['english-family'];
         var aQueenLizCardValues = _convertDictionaryObjectsToElements(oDictionary);
 
-        // var aQueenLizCardValues = [
-        //     'scientist', 'scale', 'advantage', 'cost', 'psychology',
-        //     'jogging', 'air', 'parachute', 'shoes', 'paint',
-        //     'flour', 'lake', 'slope', 'lock', 'flake',
-        //     'whiskey', 'bagel', 'feta cheese', 'watermelon', 'pumpernickel',
-        //     'beach', 'watergun', 'cobblestones', 'baby', 'wheat'
-        // ];
-    
-        var aCards = oGameBox.makeCards(aQueenLizCardValues);
+        var aCards = GameBox.makeCards(aQueenLizCardValues, 30);
         
         var oQueenLizGamePlay = new QueenLizGamePlay(
             nNumPlayers,
@@ -172,6 +173,11 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
         }
         return aDictionaryElements;
     }
+
+    var menuButtonPressed = function () {
+        var oMenuButton = document.getElementById('menuButton');
+        Tools.toggleClass(oMenuButton, 'visible');
+    };
 
     var dictionaryButtonPressed = function () {
         console.log('dictionary button pressed');
