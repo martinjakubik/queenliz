@@ -18,7 +18,7 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
 
     };
 
-    /**
+        /**
      * makes the initial master view
      */
     GameBox.makeMasterView = function () {
@@ -35,7 +35,6 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
 
         Tools.makeButton({
             id: 'menuButton',
-            label: 'Menu',
             parentView: oMasterView,
             handler: menuButtonPressed.bind(this)
         });
@@ -61,6 +60,11 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
             handler: addToDictionaryButtonPressed.bind(this)
         });
 
+        var oAddedDictionaryWordStatusView = document.createElement('div');
+        Tools.setClass(oAddedDictionaryWordStatusView, 'addedDictionaryWordStatus');
+        oAddedDictionaryWordStatusView.setAttribute('id', 'addedDictionaryWordStatus');
+        oMenuView.insertBefore(oAddedDictionaryWordStatusView, null);
+    
         oMasterView.insertBefore(oMenuView, null);
 
     };
@@ -89,6 +93,23 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
         document.body.insertBefore(oResultView, null);
     };
 
+    var menuButtonPressed = function () {
+        var oMenuView = document.getElementById('menu');
+        Tools.toggleClass(oMenuView, 'visible');
+    };
+
+    var addToDictionaryButtonPressed = function () {
+
+        var oNewWord = this.wordToAdd;
+        this.wordToAdd = '';
+        if (oNewWord && oNewWord.trim().length > 0 ) {
+            var oDatabase = firebase.database();
+            var oEnglishDictionaryReference = oDatabase.ref('dictionaries/english-family/' + oNewWord);
+            
+            oEnglishDictionaryReference.set(oNewWord);
+        }
+    };
+
     GameBox.getRandomName = function (nName, aNames, sNotThisName) {
 
         var i, aCopyOfNames = [];
@@ -107,44 +128,43 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
         return 'Name' + nName;
     };
 
-    GameBox.renderResult = function (sResult) {
-        var oResultView = document.getElementById('result');
-
-        var oContent = document.createTextNode(sResult ? sResult : '');
-        if (oResultView.firstChild) {
-            oResultView.removeChild(oResultView.firstChild);
-        }
-        oResultView.appendChild(oContent);
-    };
-
-    GameBox.makeCards = function (aCardValues, nNumberOfCards) {
-        var aCards = [];
-
-        var i;
-        var nNumberOfCardsInStack = Math.min(aCardValues.length, nNumberOfCards);
-
-        // distributes the cards into suits
-        for (i = 0; i < nNumberOfCardsInStack; i++) {
-            aCards.push({
-                value: aCardValues[i],
-            });
-        }
-
-        return aCards;
-    };
-
-    GameBox.prototype.getDictionary = function (oSuccessFunction) {
+    GameBox.prototype.getDictionary = function (fnSuccessfullyGotDictionaries, sAddedWord) {
 
         var oGameBox = this;
         var oDatabase = firebase.database();
         var oDictionariesReference = oDatabase.ref('dictionaries');
+        var oEnglishFamilyDictionaryReference = oDatabase.ref('dictionaries/english-family');
+    
+        oEnglishFamilyDictionaryReference.on('child_added', function (snapshot) {
+            var sAddedWord = snapshot ? snapshot.val() : null;
+            this.updateDictionaryWordStatusView.call(oGameBox, sAddedWord);
+        }.bind(this));
     
         oDictionariesReference.once('value', function (snapshot) {
             oGameBox.dictionaries = snapshot.val();
 
-            oSuccessFunction.call(oGameBox);
+            fnSuccessfullyGotDictionaries.call(oGameBox);
         });
     
+    };
+
+    GameBox.prototype.updateDictionaryWordStatusView = function (sAddedWord) {
+        var oAddedDictionaryWordStatusView = document.getElementById('addedDictionaryWordStatus');
+        if (sAddedWord) {
+            oAddedDictionaryWordStatusView.innerHTML = sAddedWord;
+            _clearAddWordTextInput();
+            Tools.addClass(oAddedDictionaryWordStatusView, 'visible');
+        } else {
+            oAddedDictionaryWordStatusView.innerHTML = '';
+        }
+
+        var timeoutID;
+
+        timeoutID = window.setTimeout(clearStatusView, 2 * 1000);
+        function clearStatusView() {
+            window.clearTimeout(timeoutID);
+            Tools.removeClass(oAddedDictionaryWordStatusView, 'visible');
+        }
     };
 
     GameBox.prototype.getDictionarySuccess = function () {
@@ -174,6 +194,32 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
 
     };
 
+    GameBox.renderResult = function (sResult) {
+        var oResultView = document.getElementById('result');
+
+        var oContent = document.createTextNode(sResult ? sResult : '');
+        if (oResultView.firstChild) {
+            oResultView.removeChild(oResultView.firstChild);
+        }
+        oResultView.appendChild(oContent);
+    };
+
+    GameBox.makeCards = function (aCardValues, nNumberOfCards) {
+        var aCards = [];
+
+        var i;
+        var nNumberOfCardsInStack = Math.min(aCardValues.length, nNumberOfCards);
+
+        // distributes the cards into suits
+        for (i = 0; i < nNumberOfCardsInStack; i++) {
+            aCards.push({
+                value: aCardValues[i],
+            });
+        }
+
+        return aCards;
+    };
+
     var _convertDictionaryObjectsToElements = function (oDictionaryObjects) {
         var aDictionaryElements = [];
         var aKeys = Object.keys(oDictionaryObjects);
@@ -186,24 +232,10 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
         return aDictionaryElements;
     }
 
-    var menuButtonPressed = function () {
-        var oMenuView = document.getElementById('menu');
-        Tools.toggleClass(oMenuView, 'visible');
-    };
-
-    var dictionaryButtonPressed = function () {
-        console.log('dictionary button pressed');
-    };
-
-    var addToDictionaryButtonPressed = function () {
-        console.log('add to dictionary: \'' + this.wordToAdd + '\'');
-
-        var oNewWord = this.wordToAdd;
-        var oDatabase = firebase.database();
-        var oEnglishDictionaryReference = oDatabase.ref('dictionaries/english-family/' + oNewWord);
-
-        oEnglishDictionaryReference.set(oNewWord);
-    };
+    var _clearAddWordTextInput = function () {
+        var oAddWordTextInput = document.getElementById('addWord');
+        oAddWordTextInput.value = '';
+    }
 
     // starts set up of the game
 
