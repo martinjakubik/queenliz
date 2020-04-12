@@ -305,7 +305,7 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
  
     var _startPlayMode = function () {
 
-        _makeViewsInvisible([ 'playMode', 'addWordMode', 'addWord','addToDictionary', 'exitAddWordMode' ]);
+        _makeViewsInvisible([ 'menu', 'playMode', 'addWordMode', 'addWord','addToDictionary', 'exitAddWordMode' ]);
         _makeViewsVisible([ 'replay' ]);
 
     };
