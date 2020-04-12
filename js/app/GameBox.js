@@ -4,6 +4,12 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
 
     'use strict';
 
+    var STATE_INIT = 0;
+    var STATE_GAME_START_ROUND_1 = 1;
+    var STATE_GAME_START_ROUND_2 = 2;
+    var STATE_GAME_START_ROUND_3 = 3;
+    var STATE_ADDING_WORDS = 4;
+
     var GameBox = function () {
 
         var MAX_NUMBER_OF_SLOTS = 3;
@@ -39,7 +45,23 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
             handler: menuButtonPressed.bind(this)
         });
 
-        var oHandleTextInputChanged = function (oEvent) {
+        var oAddWordModeButton = Tools.makeButton({
+            id: 'addWordMode',
+            label: 'Add Words to Dictionary',
+            parentView: oMenuView,
+            handler: addWordModeButtonPressed.bind(this)
+        });
+        Tools.addClass(oAddWordModeButton, 'visible');
+
+        var oPlayModeButton = Tools.makeButton({
+            id: 'playMode',
+            label: 'Play',
+            parentView: oMenuView,
+            handler: playModeButtonPressed.bind(this)
+        });
+        Tools.addClass(oPlayModeButton, 'visible');
+
+        var oHandleAddWordTextInputChanged = function (oEvent) {
             var sValue = '';
             if (oEvent && oEvent.target) {
                 sValue = oEvent.target.value;
@@ -50,11 +72,11 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
         Tools.makeTextInput({
             id: 'addWord',
             parentView: oMenuView,
-            handler: oHandleTextInputChanged.bind(this)
+            handler: oHandleAddWordTextInputChanged.bind(this)
         });
 
         Tools.makeButton({
-            id: 'addTodictionary',
+            id: 'addToDictionary',
             label: 'Add to Dictionary',
             parentView: oMenuView,
             handler: addToDictionaryButtonPressed.bind(this)
@@ -64,7 +86,21 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
         Tools.setClass(oAddedDictionaryWordStatusView, 'addedDictionaryWordStatus');
         oAddedDictionaryWordStatusView.setAttribute('id', 'addedDictionaryWordStatus');
         oMenuView.insertBefore(oAddedDictionaryWordStatusView, null);
-    
+
+        Tools.makeButton({
+            id: 'exitAddWordMode',
+            label: 'Done',
+            parentView: oMenuView,
+            handler: exitAddWordModeButtonPressed.bind(this)
+        });
+
+        Tools.makeButton({
+            id: 'replay',
+            label: 'Play Again',
+            parentView: oMenuView,
+            handler: replayButtonPressed.bind(this)
+        });
+
         oMasterView.insertBefore(oMenuView, null);
 
     };
@@ -98,6 +134,18 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
         Tools.toggleClass(oMenuView, 'visible');
     };
 
+    var addWordModeButtonPressed = function () {
+        _enterAddWordMode.call(this);
+    };
+
+    var exitAddWordModeButtonPressed = function () {
+        _exitAddWordMode.call(this);
+    };
+
+    var playModeButtonPressed = function () {
+        _startPlayMode.call(this);
+    };
+    
     var addToDictionaryButtonPressed = function () {
 
         var oNewWord = this.wordToAdd;
@@ -108,6 +156,10 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
             
             oEnglishDictionaryReference.set(oNewWord);
         }
+    };
+
+    var replayButtonPressed = function () {
+        _replay.call(this);
     };
 
     GameBox.getRandomName = function (nName, aNames, sNotThisName) {
@@ -237,8 +289,57 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
         oAddWordTextInput.value = '';
     }
 
-    // starts set up of the game
+    var _enterAddWordMode = function () {
 
+        _makeViewsVisible([ 'addWord','addToDictionary', 'exitAddWordMode' ]);
+        _makeViewsInvisible([ 'playMode', 'addWordMode', 'replay' ]);
+
+    };
+    
+    var _exitAddWordMode = function () {
+    
+        _makeViewsInvisible([ 'addWord','addToDictionary', 'exitAddWordMode', 'replay' ]);
+        _makeViewsVisible([ 'playMode', 'addWordMode' ]);
+
+    };
+ 
+    var _startPlayMode = function () {
+
+        _makeViewsInvisible([ 'playMode', 'addWordMode', 'addWord','addToDictionary', 'exitAddWordMode' ]);
+        _makeViewsVisible([ 'replay' ]);
+
+    };
+    
+    var _replay = function () {
+        
+        _makeViewsInvisible([ 'addWord','addToDictionary', 'exitAddWordMode', 'replay' ]);
+        _makeViewsVisible([ 'playMode', 'addWordMode' ]);
+
+    };
+
+    var _makeViewsVisible = function (aViews) {
+        var i;
+        for (i = 0; i < aViews.length; i++) {
+            var sViewId = aViews[i];
+            var oView = document.getElementById(sViewId);
+            if (oView) {
+                Tools.addClass(oView, 'visible');
+            }
+        }
+    };
+
+    var _makeViewsInvisible = function (aViews) {
+        var i;
+        for (i = 0; i < aViews.length; i++) {
+            var sViewId = aViews[i];
+            var oView = document.getElementById(sViewId);
+            if (oView) {
+                Tools.removeClass(oView, 'visible');
+            }
+        }
+    };
+
+    // starts set up of the game
     GameBox.makeMasterView();
     GameBox.makeGameView();
 
