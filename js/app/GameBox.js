@@ -4,11 +4,7 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
 
     'use strict';
 
-    var STATE_INIT = 0;
-    var STATE_GAME_START_ROUND_1 = 1;
-    var STATE_GAME_START_ROUND_2 = 2;
-    var STATE_GAME_START_ROUND_3 = 3;
-    var STATE_ADDING_WORDS = 4;
+    var NUMBER_OF_CARDS_IN_STACK = 30;
 
     var GameBox = function () {
 
@@ -226,7 +222,7 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
         var oDictionary = oGameBox.dictionaries['english-family'];
         var aQueenLizCardValues = _convertDictionaryObjectsToElements(oDictionary);
 
-        var aCards = GameBox.makeCards(aQueenLizCardValues, 30);
+        var aCards = GameBox.makeCards(aQueenLizCardValues, NUMBER_OF_CARDS_IN_STACK);
         
         var oQueenLizGamePlay = new QueenLizGamePlay(
             nNumPlayers,
