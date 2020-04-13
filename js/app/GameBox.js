@@ -118,6 +118,12 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
 
         oGameView.insertBefore(oPlayAreaView, null);
 
+        var oCountdownView = document.createElement('div');
+        Tools.setClass(oCountdownView, 'countdown');
+        oCountdownView.setAttribute('id', 'countdown');
+
+        oGameView.insertBefore(oCountdownView, null);
+
         var oResultView = document.createElement('div');
         Tools.setClass(oResultView, 'result');
         oResultView.setAttribute('id', 'result');
