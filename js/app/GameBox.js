@@ -146,11 +146,14 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
 
         var oNewWord = this.wordToAdd;
         this.wordToAdd = '';
-        if (oNewWord && oNewWord.trim().length > 0 ) {
+        var oNewWordValue = oNewWord.trim();
+        if (oNewWordValue && oNewWordValue.length > 0 ) {
+            var oMatchSpaces = / /g;
+            var oNewWordKey = oNewWordValue.toLowerCase().replace(oMatchSpaces, '_');
             var oDatabase = firebase.database();
-            var oEnglishDictionaryReference = oDatabase.ref('dictionaries/english-family/' + oNewWord);
+            var oEnglishDictionaryReference = oDatabase.ref('dictionaries/english-family/' + oNewWordKey);
             
-            oEnglishDictionaryReference.set(oNewWord);
+            oEnglishDictionaryReference.set(oNewWordValue);
         }
     };
 
