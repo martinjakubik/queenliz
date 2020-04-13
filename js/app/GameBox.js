@@ -215,7 +215,7 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
         }
     };
 
-    GameBox.prototype.getDictionarySuccess = function () {
+    GameBox.prototype.afterGetDictionarySuccessThenStartGame = function () {
 
         var nNumPlayers = 2;
 
@@ -343,6 +343,6 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
 
     var oGameBox = new GameBox();
 
-    oGameBox.getDictionary.call(oGameBox, oGameBox.getDictionarySuccess.bind(oGameBox));
+    oGameBox.getDictionary.call(oGameBox, oGameBox.afterGetDictionarySuccessThenStartGame.bind(oGameBox));
 
 });
