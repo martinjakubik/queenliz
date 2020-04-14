@@ -224,41 +224,17 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
         }
     };
 
-    GameBox.prototype.afterGetDictionarySuccessThenStartGame = function () {
+    GameBox.prototype.afterGetDictionarySuccessThenEnterPrepareGameMode = function () {
 
         var nNumPlayers = 2;
 
         var oDictionary = oGameBox.dictionaries['english-family'];
+
         var aQueenLizCardValues = _convertDictionaryObjectsToElements(oDictionary);
-
         var aCards = GameBox.makeCards(aQueenLizCardValues, NUMBER_OF_CARDS_IN_STACK);
+
+        GameBox.startGame(nNumPlayers, aCards);
         
-        var oQueenLizGamePlay = new QueenLizGamePlay(
-            nNumPlayers,
-            aCards,
-            aHomebaseNames,
-            oGameBox.maxNumberOfSlots,
-            oGameBox.cardWidth,
-            {
-                renderResult: GameBox.renderResult,
-                getRandomName: GameBox.getRandomName
-            }
-        );
-    
-        var bShuffleCards = true;
-    
-        oQueenLizGamePlay.start(bShuffleCards);
-
-    };
-
-    GameBox.renderResult = function (sResult) {
-        var oResultView = document.getElementById('result');
-
-        var oContent = document.createTextNode(sResult ? sResult : '');
-        if (oResultView.firstChild) {
-            oResultView.removeChild(oResultView.firstChild);
-        }
-        oResultView.appendChild(oContent);
     };
 
     GameBox.makeCards = function (aCardValues, nNumberOfCards) {
@@ -275,6 +251,40 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
         }
 
         return aCards;
+    };
+
+    GameBox.startGame = function (nNumPlayers, aCards) {
+
+        var oDatabase = firebase.database();
+        var oEnglishFamilyDictionaryReference = oDatabase.ref('dictionaries/english-family');
+        oEnglishFamilyDictionaryReference.off('child_added');
+    
+        var oQueenLizGamePlay = new QueenLizGamePlay(
+            nNumPlayers,
+            aCards,
+            aHomebaseNames,
+            oGameBox.maxNumberOfSlots,
+            oGameBox.cardWidth,
+            {
+                renderResult: GameBox.renderResult,
+                getRandomName: GameBox.getRandomName
+            }
+        );
+    
+        var bShuffleCards = true;
+    
+        oQueenLizGamePlay.start(bShuffleCards);
+
+    }
+ 
+    GameBox.renderResult = function (sResult) {
+        var oResultView = document.getElementById('result');
+
+        var oContent = document.createTextNode(sResult ? sResult : '');
+        if (oResultView.firstChild) {
+            oResultView.removeChild(oResultView.firstChild);
+        }
+        oResultView.appendChild(oContent);
     };
 
     var _convertDictionaryObjectsToElements = function (oDictionaryObjects) {
@@ -352,6 +362,6 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
 
     var oGameBox = new GameBox();
 
-    oGameBox.startGetDictionary.call(oGameBox, oGameBox.afterGetDictionarySuccessThenStartGame.bind(oGameBox));
+    oGameBox.startGetDictionary.call(oGameBox, oGameBox.afterGetDictionarySuccessThenEnterPrepareGameMode.bind(oGameBox));
 
 });
