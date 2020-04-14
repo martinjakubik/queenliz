@@ -185,7 +185,7 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
         return 'Name' + nName;
     };
 
-    GameBox.prototype.getDictionary = function (fnSuccessfullyGotDictionaries, sAddedWord) {
+    GameBox.prototype.startGetDictionary = function (fnSuccessfullyGotDictionaries) {
 
         var oGameBox = this;
         var oDatabase = firebase.database();
@@ -352,6 +352,6 @@ requirejs(['QueenLizGamePlay', 'Tools'], function (QueenLizGamePlay, Tools) {
 
     var oGameBox = new GameBox();
 
-    oGameBox.getDictionary.call(oGameBox, oGameBox.afterGetDictionarySuccessThenStartGame.bind(oGameBox));
+    oGameBox.startGetDictionary.call(oGameBox, oGameBox.afterGetDictionarySuccessThenStartGame.bind(oGameBox));
 
 });
