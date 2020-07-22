@@ -1,2 +1,4 @@
 # queen elizabeth
-card game
+word card game
+
+![Screenshot of Cards](resources/screenshot.png)
