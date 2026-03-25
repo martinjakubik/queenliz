@@ -1,17 +1,16 @@
 {
-  "name": "queenliz",
-  "version": "0.0.1",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/martinjakubik/war.git"
-  },
-  "license": "SEE LICENSE IN LICENSE.md",
-  "devDependencies": {
-    "grunt": ">=1.5.3",
-    "grunt-contrib-copy": "^1.0.0",
-    "grunt-ftp": "^2.1.0",
-    "kierki": "^1.2.1",
-    "load-grunt-tasks": "^3.5.0"
-  },
-  "dependencies": {}
+    "name": "queenliz",
+    "version": "0.0.1",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/martinjakubik/war.git"
+    },
+    "scripts": {
+        "postinstall": "node postinstall.js"
+    },
+    "license": "SEE LICENSE IN LICENSE.md",
+    "devDependencies": {
+        "kierki": "^1.2.1"
+    },
+    "dependencies": {}
 }

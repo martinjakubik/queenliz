@@ -14,9 +14,9 @@ TODO to Move to supertitle packaging
  - update links in ./app/*.html files from ../js/lib/ to ./
  - update postinstall.js to point to new app and lib paths
  - update Card.js to ES6 imports and class
- - delete grunt file
- - delete grunttasks directory
- - delete grunt file from kierki
+ done - delete grunt file
+ done - delete grunttasks directory
+ done - delete grunt file from kierki
  - add DOCTYPE html
  - rewrite js function-classes as ES6 classes (...X.prototype = Object.create(...prototype) => class X)
  - copy resources/* to app/
@@ -38,7 +38,7 @@ TODO to improve App
 
  - figure out if we need this:
    findHomebaseForHomebaseViewId
-   and set 
+   and set
         var bIsLocalEvent = ; in localHomebaseTappedCardInHand accordingly
 
  x - do we still need playerControllers and homebaseControllers? [homebase yes, and playerControllers become a single stackController]
@@ -46,9 +46,9 @@ TODO to improve App
  -> we don't really have players
  -> a player controller is really a way to update the UI at the right time
  -> so we'll only have 1 stack controller
- 
+
  -> and 2 homebase controllers
- 
+
  - finish functions
 
 moveToNextRound (if we are at end of stack, shuffle and reset the stack)
@@ -84,11 +84,11 @@ isGameFinished (check if we have played three rounds)
 
  - remove name from homebase
 
- - what is the point of 
+ - what is the point of
 
                 oRemotePlayer.setHand(oPlayerHandValue);
 
-in 
+in
             // sets homebase's hand
             if (oGamePlay.stackController) {
                 oGamePlay.stackController.setHand(
@@ -112,4 +112,3 @@ in
         if (!oGamePlay.stackController) {
             oGamePlay.stackController = oGamePlay.gameSlot ? oGamePlay.gameSlot.stack : null;
         }
-
